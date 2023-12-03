@@ -107,9 +107,11 @@ const Users = () => {
       throw new Error("Please select at least two users before creating a team.");
     }
 
-  const handleCreateTeam = async () => {
-  try {
-    // ... (existing code)
+    const allUsersAvailable = validSelectedUsers.every((user) => user.availability);
+
+    if (!allUsersAvailable) {
+      throw new Error("All selected users must be available.");
+    }
 
     const response = await axios.post("https://manage-user-backend.onrender.com/api/team", {
       teamName,
@@ -130,10 +132,9 @@ const Users = () => {
       console.error("Server error details:", error.response.data);
     }
 
-    alert("Error creating team. Please try again.");
+    alert(error.message || "Error creating team. Please try again.");
   }
 };
-
 
   const filteredUsers = users.filter(
     (user) =>

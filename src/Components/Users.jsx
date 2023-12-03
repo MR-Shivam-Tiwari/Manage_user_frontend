@@ -40,7 +40,7 @@ const Users = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://manage-user-backend.onrender.com/api/users?page=${currentPage}&limit=${usersPerPage}&search=${searchTerm}&domain=${filters.domain}&gender=${filters.gender}&availability=${filters.availability}`
+          `http://localhost:3001/api/users?page=${currentPage}&limit=${usersPerPage}&search=${searchTerm}&domain=${filters.domain}&gender=${filters.gender}&availability=${filters.availability}`
         );
         setUsers(response.data.users);
         setTotalPages(Math.ceil(response.data.totalUsers / usersPerPage));
@@ -96,45 +96,44 @@ const Users = () => {
   };
 
   const handleCreateTeam = async () => {
-  try {
     if (!teamName.trim()) {
-      throw new Error("Please provide a non-empty team name before creating a team.");
+      alert("Please provide a non-empty team name before creating a team.");
+      return;
     }
+
+    console.log("Selected Users:", selectedUsers);
 
     const validSelectedUsers = selectedUsers.filter((user) => user && user._id);
 
+    console.log("Valid Selected Users:", validSelectedUsers);
+
     if (validSelectedUsers.length < 2) {
-      throw new Error("Please select at least two users before creating a team.");
+      alert("Please select at least two users before creating a team.");
+      return;
     }
 
-    const allUsersAvailable = validSelectedUsers.every((user) => user.availability);
+    try {
+      console.log("Sending team creation request:", {
+        teamName,
+        selectedUsers: validSelectedUsers.map((user) => user._id),
+      });
 
-    if (!allUsersAvailable) {
-      throw new Error("All selected users must be available.");
+      const response = await axios.post("http://localhost:3001/api/team", {
+        teamName,
+        selectedUsers: validSelectedUsers.map((user) => user._id),
+      });
+
+      console.log("Team creation response:", response.data);
+
+      setSelectedUsers([]);
+      setTeamName("");
+
+      history.push(`/teams?teamId=${response.data._id}`);
+    } catch (error) {
+      console.error("Error creating team:", error);
+      alert("Error creating team. Please try again.");
     }
-
-    const response = await axios.post("https://manage-user-backend.onrender.com/api/team", {
-      teamName,
-      selectedUsers: validSelectedUsers.map((user) => user._id),
-    });
-
-    console.log("Team created:", response.data);
-
-    setSelectedUsers([]);
-    setTeamName("");
-
-    history.push(`/teams?teamId=${response.data._id}`);
-  } catch (error) {
-    console.error("Error creating team:", error);
-
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      console.error("Server error details:", error.response.data);
-    }
-
-    alert(error.message || "Error creating team. Please try again.");
-  }
-};
+  };
 
   const filteredUsers = users.filter(
     (user) =>

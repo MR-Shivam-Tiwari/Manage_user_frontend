@@ -6,7 +6,7 @@ const Teams = () => {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/team");
+        const response = await fetch("https://manage-user-backend.onrender.com/api/team");
         const data = await response.json();
         setTeams(data.teams);
       } catch (error) {
@@ -19,7 +19,7 @@ const Teams = () => {
 
   const handleDeleteTeam = async (teamId) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/team/${teamId}`, {
+      const response = await fetch(`https://manage-user-backend.onrender.com/api/team/${teamId}`, {
         method: "DELETE",
       });
 

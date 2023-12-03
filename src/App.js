@@ -10,7 +10,7 @@ const App = () => {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/team");
+        const response = await fetch("https://manage-user-backend.onrender.com/api/team");
         const data = await response.json();
 
         // Set teams as an array with a single team object

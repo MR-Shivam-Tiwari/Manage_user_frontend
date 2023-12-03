@@ -40,7 +40,7 @@ const Users = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/users?page=${currentPage}&limit=${usersPerPage}&search=${searchTerm}&domain=${filters.domain}&gender=${filters.gender}&availability=${filters.availability}`
+          `https://manage-user-backend.onrender.com/api/users?page=${currentPage}&limit=${usersPerPage}&search=${searchTerm}&domain=${filters.domain}&gender=${filters.gender}&availability=${filters.availability}`
         );
         setUsers(response.data.users);
         setTotalPages(Math.ceil(response.data.totalUsers / usersPerPage));
@@ -113,7 +113,7 @@ const Users = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3001/api/team", {
+      const response = await axios.post("https://manage-user-backend.onrender.com/api/team", {
         teamName,
         selectedUsers: validSelectedUsers.map((user) => user._id),
       });

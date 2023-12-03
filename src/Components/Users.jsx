@@ -107,6 +107,10 @@ const Users = () => {
       throw new Error("Please select at least two users before creating a team.");
     }
 
+  const handleCreateTeam = async () => {
+  try {
+    // ... (existing code)
+
     const response = await axios.post("https://manage-user-backend.onrender.com/api/team", {
       teamName,
       selectedUsers: validSelectedUsers.map((user) => user._id),
@@ -129,6 +133,7 @@ const Users = () => {
     alert("Error creating team. Please try again.");
   }
 };
+
 
   const filteredUsers = users.filter(
     (user) =>
